@@ -82,7 +82,7 @@ const Portfolio = () => {
                         <div style={styles.skillCategory}>
                             <h3 style={styles.skillCategoryTitle}>Frameworks & Backend</h3>
                             <div style={styles.grid}>
-                                {['React.js', 'Node.js', 'Express.js', 'Flask'].map((skill, index) => (
+                                {['React.js', 'Node.js', 'Express.js', 'Flask', 'Editor.js'].map((skill, index) => (
                                     <div key={index} style={styles.skillCard}>{skill}</div>
                                 ))}
                             </div>
@@ -100,7 +100,7 @@ const Portfolio = () => {
                         <div style={styles.skillCategory}>
                             <h3 style={styles.skillCategoryTitle}>Databases & Tools</h3>
                             <div style={styles.grid}>
-                                {['MongoDB', 'PostgreSQL', 'Docker', 'Git', 'Vercel'].map((skill, index) => (
+                                {['MongoDB', 'PostgreSQL', 'Neon DB', 'Docker', 'Git', 'GitHub', 'Vercel', 'Render'].map((skill, index) => (
                                     <div key={index} style={styles.skillCard}>{skill}</div>
                                 ))}
                             </div>
