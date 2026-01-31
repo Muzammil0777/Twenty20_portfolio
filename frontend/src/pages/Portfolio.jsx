@@ -118,14 +118,24 @@ const Portfolio = () => {
                                 to digitize examination workflows. Includes JWT authentication,
                                 role-based access control, and GenAI-assisted question generation.
                             </p>
-                            <a
-                                href="https://github.com/Muzammil0777/QPDS-UI"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={styles.link}
-                            >
-                                View Repository →
-                            </a>
+                            <div style={styles.linksRow}>
+                                <a
+                                    href="https://github.com/Muzammil0777/QPDS-UI"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={styles.link}
+                                >
+                                    View Repository →
+                                </a>
+                                <a
+                                    href="https://qpds-ui.vercel.app/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={styles.link}
+                                >
+                                    Live Demo ↗
+                                </a>
+                            </div>
                         </div>
                         <div style={styles.projectCard}>
                             <h3 style={styles.projectTitle}>Article Generator using RAG</h3>
@@ -329,6 +339,11 @@ const styles = {
         marginBottom: '1.5rem',
         flex: '1',
     },
+    linksRow: {
+        display: 'flex',
+        gap: '1rem',
+        marginTop: 'auto',
+    },
     link: {
         display: 'inline-block',
         color: '#2563eb',
@@ -336,7 +351,6 @@ const styles = {
         fontSize: '0.95rem',
         textDecoration: 'none',
         transition: 'color 0.2s',
-        marginTop: 'auto',
     },
     footer: {
         textAlign: 'center',
