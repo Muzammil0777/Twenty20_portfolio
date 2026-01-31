@@ -11,7 +11,11 @@ const app = express();
 // Middleware
 app.use(express.json()); // Body parser for JSON
 app.use(cors({
-    origin: process.env.FRONTEND_URL || '*', // Allow frontend domain
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        callback(null, true);
+    },
     credentials: true,
 })); // Enable CORS
 
