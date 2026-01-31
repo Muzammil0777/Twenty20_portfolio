@@ -74,6 +74,14 @@ app.use(async (req, res, next) => {
     }
 });
 
+// Routes - Must be AFTER the DB middleware
+app.use('/api/auth', require('./routes/auth'));
+
+// Simple root route
+app.get('/', (req, res) => {
+    res.send('API is running...');
+});
+
 const PORT = process.env.PORT || 5000;
 
 // Only listen if not running as a Vercel function (or if run directly)
