@@ -19,13 +19,7 @@ app.use(cors({
     credentials: true,
 })); // Enable CORS
 
-// Routes
-app.use('/api/auth', require('./routes/auth'));
-
-// Simple root route
-app.get('/', (req, res) => {
-    res.send('API is running...');
-});
+// Routes definition moved after DB connection middleware
 
 // Database connection
 // Use global cache to prevent multiple connections in serverless environment
