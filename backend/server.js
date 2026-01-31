@@ -28,49 +28,55 @@ app.get('/', (req, res) => {
 });
 
 // Database connection
-let cachedToken = null;
+// Use global cache to prevent multiple connections in serverless environment
+let cached = global.mongoose;
+
+if (!cached) {
+    cached = global.mongoose = { conn: null, promise: null };
+}
 
 const connectDB = async () => {
-    if (cachedToken) {
-        return cachedToken;
+    if (cached.conn) {
+        return cached.conn;
     }
 
-    // Check if we already have a connection
-    if (mongoose.connection.readyState === 1) {
-        return mongoose.connection;
+    if (!cached.promise) {
+        const opts = {
+            bufferCommands: false, // Disable Mongoose buffering
+            serverSelectionTimeoutMS: 5000, // Fail fast if DB is down
+            socketTimeoutMS: 45000, // Close sockets after 45s
+        };
+
+        cached.promise = mongoose.connect(process.env.MONGO_URI, opts).then((mongoose) => {
+            console.log(`MongoDB Connected: ${mongoose.connection.host}`);
+            return mongoose;
+        });
     }
 
     try {
-        const conn = await mongoose.connect(process.env.MONGO_URI);
-        console.log(`MongoDB Connected: ${conn.connection.host}`);
-        cachedToken = conn;
-        return conn;
-    } catch (error) {
-        console.error(`Error: ${error.message}`);
-        // Don't exit process in serverless env, just throw
-        if (process.env.NODE_ENV !== 'production') {
-            process.exit(1);
-        }
-        throw error;
+        cached.conn = await cached.promise;
+    } catch (e) {
+        cached.promise = null;
+        throw e;
     }
+
+    return cached.conn;
 };
 
-// Connect to DB immediately if not in test/CI (optional, but good for local)
-// For Vercel, we might want to connect inside the handler or middleware if possible, 
-// but top level await is not always standard in CJS. 
-// We will call connectDB on every request as a middleware to ensure connection.
-
+// Middleware to ensure DB is connected before handling requests
 app.use(async (req, res, next) => {
-    // skip for static files or if already connected
+    // If we are already connected, proceed
     if (mongoose.connection.readyState === 1) {
         return next();
     }
+
     try {
         await connectDB();
         next();
     } catch (err) {
         console.error("DB Connection Error:", err);
-        res.status(500).json({ error: 'Database connection failed' });
+        // Important: If connection fails, ensure we send a response so it doesn't hang
+        res.status(500).json({ error: 'Database connection failed', details: err.message });
     }
 });
 
