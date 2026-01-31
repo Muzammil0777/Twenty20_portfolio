@@ -35,14 +35,18 @@ if (!cached) {
     cached = global.mongoose = { conn: null, promise: null };
 }
 
+// 1. Force buffering OFF globally so we see real errors instantly
+mongoose.set('bufferCommands', false);
+
 const connectDB = async () => {
-    if (cached.conn) {
+    // 2. ONLY return cached connection if it is actually READY (state === 1)
+    if (cached.conn && cached.conn.connection.readyState === 1) {
         return cached.conn;
     }
 
     if (!cached.promise) {
         const opts = {
-            bufferCommands: false, // Disable Mongoose buffering
+            bufferCommands: false, // Double ensure
             serverSelectionTimeoutMS: 5000, // Fail fast if DB is down
             socketTimeoutMS: 45000, // Close sockets after 45s
         };
@@ -65,17 +69,13 @@ const connectDB = async () => {
 
 // Middleware to ensure DB is connected before handling requests
 app.use(async (req, res, next) => {
-    // If we are already connected, proceed
-    if (mongoose.connection.readyState === 1) {
-        return next();
-    }
-
     try {
         await connectDB();
         next();
     } catch (err) {
         console.error("DB Connection Error:", err);
-        // Important: If connection fails, ensure we send a response so it doesn't hang
+        // Clean up global promise so next retry can attempt fresh connection
+        cached.promise = null;
         res.status(500).json({ error: 'Database connection failed', details: err.message });
     }
 });
