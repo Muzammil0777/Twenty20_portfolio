@@ -4,7 +4,7 @@ A full-stack portfolio application built with the MERN stack (MongoDB, Express, 
 
 ## 🚀 Live Demo
 
-[Insert Live Demo Link Here]
+https://twenty20-portfolio-o1jt.vercel.app/
 
 ## ✨ Features
 
@@ -31,8 +31,8 @@ A full-stack portfolio application built with the MERN stack (MongoDB, Express, 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/Twenty20_muz_assignment.git
-cd Twenty20_muz_assignment
+git clone https://github.com/Muzammil0777/Twenty20_portfolio.git
+cd Twenty20_portfolio
 ```
 
 ### 2. Backend Setup
